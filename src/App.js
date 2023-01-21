@@ -1,10 +1,9 @@
-import { MyApp, MyApp2,} from "./MyApp";
+import { MyApp } from "./MyApp";
 
 function App() {
   return (
     <>
       <MyApp /> 
-      <MyApp2 />
     </>
   );
 }
