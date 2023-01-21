@@ -8,28 +8,22 @@ import {
 
 export function MyApp() {
 
-    let [apiData, setApiData] = useState(null)
+    const [data, setApiData] = useState([]);
 
     useEffect(() => {
         fetch("https://ektlvbuc67.execute-api.us-east-1.amazonaws.com/events")
             .then(response => response.json())
             .then(data => setApiData(data))
+            .catch(error => console.log(error));
     }, [])
 
     return (
         <ComboBox
-
             onInput={function noRefCheck() { }}
             onSelectionChange={function noRefCheck() { }}
             placeholder="Select Title"
         >
-            <ComboBoxItem text={apiData[0].Title} />
-            <ComboBoxItem text={apiData[1].Title} />
-            <ComboBoxItem text={apiData[2].Title} />
-            <ComboBoxItem text={apiData[3].Title} />
-            <ComboBoxItem text={apiData[4].Title} />
-            <ComboBoxItem text={apiData[5].Title} />
-            <ComboBoxItem text={apiData[6].Title} />
+            {data.map((item, index) => <ComboBoxItem key={index} text={item.Title} />)}
         </ComboBox>
     );
 }
