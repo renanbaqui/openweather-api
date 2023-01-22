@@ -3,7 +3,7 @@ import { MyApp } from "./MyApp";
 function App() {
   return (
     <>
-      <MyApp /> 
+      <MyApp />
     </>
   );
 }
