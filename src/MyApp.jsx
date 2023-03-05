@@ -5,6 +5,7 @@ import {
   List,
   StandardListItem,
 } from "@ui5/webcomponents-react";
+import { useGetOpenWeather } from "./integration/useGetOpenWeather";
 
 const API_KEY = "d76d0ba625e01873300aaf0e0d205280";
 
@@ -109,7 +110,9 @@ export function MyApp() {
     setListItemLatitude(citiesCoordinates[objectIndex].lat);
     setListItemLongitude(citiesCoordinates[objectIndex].lon);
   };
-
+  
+  const {dataResponse} = useGetOpenWeather(listItemLatitude, listItemLongitude);
+  console.log()
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -131,6 +134,10 @@ export function MyApp() {
       }
     };
     fetchData();
+  }, [listItemLatitude, listItemLongitude]);
+
+  useEffect(() => {
+    console.log(dataResponse);
   }, [listItemLatitude, listItemLongitude]);
 
   function getFlagEmoji(countryCode) {
