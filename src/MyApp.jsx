@@ -42,9 +42,60 @@ export function MyApp() {
     },
   ];
 
-  //  [35.6895, 139.6917]
+  // const weatherEmojis = {
+  //   Clouds: "☁️",
+  //   Clear: "☀️",
+  // };
+
   const [listItemLatitude, setListItemLatitude] = useState("51.5085");
   const [listItemLongitude, setListItemLongitude] = useState("-0.1257");
+  const [listFlag, setListFlag] = useState("");
+  const [listWeatherEmoji, setListeatherEmoji] = useState("");
+
+  const [apiData, setApiData] = useState({
+    coord: {
+      lon: -0.1278,
+      lat: 51.5074,
+    },
+    weather: [
+      {
+        id: 800,
+        main: "",
+        description: "",
+        icon: "01n",
+      },
+    ],
+    base: "stations",
+    main: {
+      temp: "",
+      feels_like: "",
+      temp_min: "",
+      temp_max: "",
+      pressure: "",
+      humidity: "",
+    },
+    visibility: "",
+    wind: {
+      speed: "",
+      deg: "",
+      gust: "",
+    },
+    clouds: {
+      all: "",
+    },
+    dt: "",
+    sys: {
+      type: "",
+      id: "",
+      country: "",
+      sunrise: "",
+      sunset: "",
+    },
+    timezone: "",
+    id: "",
+    name: "",
+    cod: "",
+  });
 
   const handleSelectionChange = (event) => {
     let objectIndex = null;
@@ -59,51 +110,6 @@ export function MyApp() {
     setListItemLongitude(citiesCoordinates[objectIndex].lon);
   };
 
-  const [apiData, setApiData] = useState({
-    coord: {
-      lon: -0.1278,
-      lat: 51.5074,
-    },
-    weather: [
-      {
-        id: 800,
-        main: "Clear",
-        description: "clear sky",
-        icon: "01n",
-      },
-    ],
-    base: "stations",
-    main: {
-      temp: 276.99,
-      feels_like: 275.06,
-      temp_min: 274.48,
-      temp_max: 278.74,
-      pressure: 1028,
-      humidity: 85,
-    },
-    visibility: 10000,
-    wind: {
-      speed: 2.1,
-      deg: 261,
-      gust: 5.93,
-    },
-    clouds: {
-      all: 7,
-    },
-    dt: 1675108308,
-    sys: {
-      type: 2,
-      id: 2019646,
-      country: "GB",
-      sunrise: 1675064547,
-      sunset: 1675097091,
-    },
-    timezone: 0,
-    id: 2643743,
-    name: "London",
-    cod: 200,
-  });
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -112,12 +118,28 @@ export function MyApp() {
         );
         const data = await response.json();
         setApiData(data);
+        const countryCode = data.sys.country;
+        setListFlag(getFlagEmoji(countryCode));
+        const main = data.weather[0].main;
+        if (main === "Clear") {
+          setListeatherEmoji("☀️");
+        } else {
+          setListeatherEmoji("☁️");
+        }
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
   }, [listItemLatitude, listItemLongitude]);
+
+  function getFlagEmoji(countryCode) {
+    const codePoints = countryCode
+      .toUpperCase()
+      .split("")
+      .map((char) => 127397 + char.charCodeAt());
+    return String.fromCodePoint(...codePoints);
+  }
 
   return (
     <>
@@ -148,13 +170,14 @@ export function MyApp() {
             {apiData.name}
           </StandardListItem>
           <StandardListItem additionalText="Description">
-            {apiData.weather[0].main},&nbsp;{apiData.weather[0].description}
+            {listWeatherEmoji}&nbsp;{apiData.weather[0].main},&nbsp;
+            {apiData.weather[0].description}
           </StandardListItem>
           <StandardListItem additionalText="Temperature">
-            {apiData.main.temp} K
+            🌡️&nbsp;{apiData.main.temp} K
           </StandardListItem>
           <StandardListItem additionalText="Perception">
-            {apiData.main.feels_like} K
+            🌡️&nbsp;{apiData.main.feels_like} K
           </StandardListItem>
           <StandardListItem additionalText="Humidity">
             {apiData.main.humidity} %
@@ -172,7 +195,7 @@ export function MyApp() {
             {apiData.timezone} s from UTC
           </StandardListItem>
           <StandardListItem additionalText="Country">
-            🇬🇧&nbsp;
+            {listFlag}&nbsp;
             {apiData.sys.country}
           </StandardListItem>
         </List>
