@@ -318,7 +318,7 @@ export function MyApp() {
     if (searchTerm.length > 2) {
       try {
         const response = await fetch(
-          `http://api.openweathermap.org/geo/1.0/direct?q=${searchTerm}&limit=${SUGGESTION_LIMIT}&appid=${API_KEY}`
+          `https://api.openweathermap.org/geo/1.0/direct?q=${searchTerm}&limit=${SUGGESTION_LIMIT}&appid=${API_KEY}`
         );
         const suggestions = await response.json();
 
